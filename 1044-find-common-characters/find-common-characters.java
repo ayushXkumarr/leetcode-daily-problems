@@ -1,33 +1,32 @@
 class Solution {
-
     public List<String> commonChars(String[] words) {
+        HashMap <Character,Integer> map = new HashMap<>();
+        for(char ch:words[0].toCharArray()){
+            map.put(ch,map.getOrDefault(ch,0)+1);
+        }
 
-        List<String> ans = new ArrayList<>();
+        for(int i=1;i<words.length;i++){
+           HashMap <Character,Integer> curr = new HashMap<>(); 
 
-        // Make a copy because we'll modify the strings
-        String[] copy = words.clone();
-
-        for (char ch : copy[0].toCharArray()) {
-
-            boolean foundInAll = true;
-
-            // Check every other word
-            for (int i = 1; i < copy.length; i++) {
-
-                int index = copy[i].indexOf(ch);
-
-                if (index == -1) {
-                    foundInAll = false;
-                    break;
-                }
-
-                // Remove only one occurrence
-                copy[i] = copy[i].substring(0, index)
-                        + copy[i].substring(index + 1);
+           for(char ch:words[i].toCharArray()){
+            curr.put(ch,curr.getOrDefault(ch,0)+1);
             }
 
-            if (foundInAll) {
-                ans.add(String.valueOf(ch));
+            for(char ch:map.keySet()){
+                int past = map.get(ch);
+                int New= curr.getOrDefault(ch,0);
+
+                if(past > New){
+                    map.put(ch,New);
+                }
+            }
+        }
+        List<String> ans = new ArrayList<>();
+        for(Map.Entry<Character,Integer> e:map.entrySet()){
+            int val = e.getValue();
+            while (val > 0) {
+                ans.add(String.valueOf(e.getKey()));
+                val--;
             }
         }
 
